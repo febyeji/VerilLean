@@ -33,12 +33,12 @@ inductive integral_number where
 | decimal (d : decimal_number)
 deriving BEq, Inhabited, Repr
 
-/- (v) number ::= integral_number | real_number -/
+-- (v) number ::= integral_number | real_number
 inductive number where
 | integral (i : integral_number)
 deriving BEq, Inhabited, Repr
 
-/- unbased_unsized_literal ::= '0 | '1 | 'z_or_x -/
+-- unbased_unsized_literal ::= '0 | '1 | 'z_or_x
 inductive unbased_unsized_literal where
 | zeros
 | ones
@@ -140,7 +140,7 @@ indexed_range ::=
 | select_indexed_range_add (se lr rr : expression)
 | select_indexed_range_sub (se lr rr : expression)
 
-/- NOTE: maybe fine to regard (concat []) as an empty queue -/
+-- NOTE: maybe fine to regard (concat []) as an empty queue
 /-
 concatenation ::=
 (v)   { expression { , expression } }
@@ -149,7 +149,7 @@ concatenation ::=
 -/
 | concat (es : List expression)
 
-/- multiple_concatenation ::= { expression concatenation } -/
+-- multiple_concatenation ::= { expression concatenation }
 | mult_concat (ne : expression) (ces : List expression)
 
 /-
@@ -171,8 +171,8 @@ cast ::=
 | unary_op (op : unary_operator) (e : expression)
 | inc_or_dec (iod : inc_or_dec_expression)
 | binary_op (op : binary_operator) (le re : expression)
-/- NOTE: need to implement patterns; see [VCondPredicate] -/
-/- conditional_expression ::= cond_predicate ? { attribute_instance } expression : expression -/
+-- NOTE: need to implement patterns; see [VCondPredicate]
+-- conditional_expression ::= cond_predicate ? { attribute_instance } expression : expression
 | cond (ce te fe : expression)
 /-
 inside_expression ::= expression inside { open_range_list }
@@ -203,7 +203,7 @@ NOTE: it looks redundant to define `constant_mintypmax_expression` and
 `constant_expression` separately. `expression` already contains both,
 thus we use expression here.
 -/
-/- constant_param_expression ::= constant_mintypmax_expression | data_type | $ -/
+-- constant_param_expression ::= constant_mintypmax_expression | data_type | $
 inductive constant_param_expression where
 | min_typ_max (ce : expression)
 deriving BEq, Inhabited, Repr
@@ -264,9 +264,9 @@ sequence_expr ::=
 (v) | sequence_expr within sequence_expr
 (v) | clocking_event sequence_expr
 -/
-/- Decided to merge property_expr and sequence_expr; let's revisit if any issues occur. -/
+-- Decided to merge property_expr and sequence_expr; let's revisit if any issues occur.
 inductive property_expr where
-/- For property_expr -/
+-- For property_expr
 | not (se : property_expr)
 | or (lse rse : property_expr)
 | and (lse rse : property_expr)
@@ -274,7 +274,7 @@ inductive property_expr where
 | imp_n (lse rse : property_expr)
 | if_else (ce : expression) (tse : property_expr) (fse : Option property_expr)
 | clk (ec : event_control) (se : property_expr)
-/- For sequence_expr -/
+-- For sequence_expr
 | expr (e : expression)
 | inter (lse rse : property_expr)
 | within (lse rse : property_expr)
@@ -282,14 +282,14 @@ deriving BEq, Inhabited, Repr
 
 -- # Assignments
 
-/- net_assignment ::= net_lvalue = expression -/
-/- variable_assignment ::= variable_lvalue = expression -/
+-- net_assignment ::= net_lvalue = expression
+-- variable_assignment ::= variable_lvalue = expression
 inductive assign where
 | net (lv : net_lvalue) (e : expression)
 deriving BEq, Inhabited, Repr
 
-/- list_of_net_assignments ::= net_assignment { , net_assignment } -/
-/- list_of_variable_assignments ::= variable_assignment { , variable_assignment } -/
+-- list_of_net_assignments ::= net_assignment { , net_assignment }
+-- list_of_variable_assignments ::= variable_assignment { , variable_assignment }
 inductive assigns where
 | one (na : assign)
 | cons (na : assign) (nas : assigns)
@@ -304,14 +304,14 @@ inductive assign_op where
 | band | bor | bxor | shl | shr | sal | sar
 deriving BEq, Inhabited, Repr
 
-/- operator_assignment ::= variable_lvalue assignment_operator expression -/
+-- operator_assignment ::= variable_lvalue assignment_operator expression
 inductive op_assign where
 | op (lv : variable_lvalue) (aop : assign_op) (e : expression)
 deriving BEq, Inhabited, Repr
 
 -- # Ports
 
-/- port_direction ::= input | output | inout | ref -/
+-- port_direction ::= input | output | inout | ref
 inductive port_direction where
 | input
 | output
@@ -319,14 +319,14 @@ inductive port_direction where
 | ref
 deriving BEq, Inhabited, Repr
 
-/- net_type ::= supply0 | supply1 | tri | triand | trior | tri0 | tri1 | wire | wand | wor -/
+-- net_type ::= supply0 | supply1 | tri | triand | trior | tri0 | tri1 | wire | wand | wor
 inductive net_type where
 | wire
 deriving BEq, Inhabited, Repr
 
-/- unpacked_dimension ::= [ constant_range ] | [ constant_expression ] -/
-/- packed_dimension ::= [ constant_range ] | unsized_dimension -/
-/- constant_range ::= constant_expression : constant_expression -/
+-- unpacked_dimension ::= [ constant_range ] | [ constant_expression ]
+-- packed_dimension ::= [ constant_range ] | unsized_dimension
+-- constant_range ::= constant_expression : constant_expression
 inductive dim where
 | range (lr rr : expression)
 | one (de : expression)
@@ -347,12 +347,12 @@ sized_or_unsized_dimension ::= unpacked_dimension | unsized_dimension
 -/
 abbrev var_dims := packed_dims
 
-/- integer_vector_type ::= bit | logic | reg -/
+-- integer_vector_type ::= bit | logic | reg
 inductive int_vec_type where
 | bit | logic | reg
 deriving BEq, Inhabited, Repr
 
-/- integer_atom_type ::= byte | shortint | int | longint | integer | time -/
+-- integer_atom_type ::= byte | shortint | int | longint | integer | time
 inductive int_atom_type where
 | byte | short_int | long_int | integer | time
 deriving BEq, Inhabited, Repr
@@ -386,12 +386,12 @@ inductive port_type where
 | port (nt : Option net_type) (pd : packed_dims)
 deriving BEq, Inhabited, Repr
 
-/- net_port_header ::= [ port_direction ] port_type -/
+-- net_port_header ::= [ port_direction ] port_type
 inductive net_port_header where
 | net (pd : Option port_direction) (pt : port_type)
 deriving BEq, Inhabited, Repr
 
-/- variable_port_header ::= [ port_direction ] data_type -/
+-- variable_port_header ::= [ port_direction ] data_type
 inductive var_port_header where
 | var (pd : Option port_direction) (dt : data_type)
 deriving BEq, Inhabited, Repr
@@ -414,7 +414,7 @@ port_declaration ::=
 | { attribute_instance } interface_port_declaration
 -/
 inductive port_decl where
-/- inout_declaration ::= inout port_type list_of_port_identifiers -/
+-- inout_declaration ::= inout port_type list_of_port_identifiers
 | inout_p (pt : port_type) (pis : port_ids)
 /-
 input_declaration ::=
@@ -455,12 +455,12 @@ deriving BEq, Inhabited, Repr
 
 -- # Statements
 
-/- cond_predicate ::= expression_or_cond_pattern { && expression_or_cond_pattern } -/
-/- expression_or_cond_pattern ::= expression | cond_pattern -/
-/- cond_pattern ::= expression matches pattern -/
+-- cond_predicate ::= expression_or_cond_pattern { && expression_or_cond_pattern }
+-- expression_or_cond_pattern ::= expression | cond_pattern
+-- cond_pattern ::= expression matches pattern
 abbrev cond_predicate := expression
 
-/- procedural_timing_control ::= delay_control | event_control | cycle_delay -/
+-- procedural_timing_control ::= delay_control | event_control | cycle_delay
 inductive proc_timing_control where
 | event (ec : event_control)
 deriving BEq, Inhabited, Repr
@@ -493,7 +493,7 @@ inductive for_step where
 | inc_or_dec (iod : inc_or_dec_expression)
 deriving BEq, Inhabited, Repr
 
-/- case_keyword ::= case | casez | casex -/
+-- case_keyword ::= case | casez | casex
 inductive case_type where
 | case | casez | casex
 deriving BEq, Inhabited, Repr
@@ -532,7 +532,7 @@ blocking_assignment ::=
 -/
 | blocking_assign_normal (vlv : variable_lvalue) (e : expression)
 
-/- nonblocking_assignment ::= variable_lvalue <= [ delay_or_event_control ] expression -/
+-- nonblocking_assignment ::= variable_lvalue <= [ delay_or_event_control ] expression
 | nonblocking_assign (vlv : variable_lvalue) (e : expression)
 
 /-
@@ -581,7 +581,7 @@ begin [ : block_identifier ] { block_item_declaration } { statement_or_null } en
 | seq_block (ss : List statement_item)
 deriving BEq, Inhabited, Repr
 
-/- statement ::= [ block_identifier : ] { attribute_instance } statement_item -/
+-- statement ::= [ block_identifier : ] { attribute_instance } statement_item
 inductive statement where
 | stmt (si : statement_item)
 deriving BEq, Inhabited, Repr
@@ -601,7 +601,7 @@ inductive always_keyword where
 | always | always_comb | always_latch | always_ff
 deriving BEq, Inhabited, Repr
 
-/- data_type_or_implicit ::= data_type | [ signing ] { packed_dimension } -/
+-- data_type_or_implicit ::= data_type | [ signing ] { packed_dimension }
 inductive data_type_or_implicit where
 | data (dt : data_type)
 | implicit (pd : packed_dims)
@@ -618,13 +618,13 @@ inductive var_decl_assign where
 | var (vid : VId) (vd : var_dims) (ve : Option expression)
 deriving BEq, Inhabited, Repr
 
-/- list_of_variable_decl_assignments ::= variable_decl_assignment { , variable_decl_assignment } -/
+-- list_of_variable_decl_assignments ::= variable_decl_assignment { , variable_decl_assignment }
 inductive var_decl_assigns where
 | one (pa : var_decl_assign)
 | cons (pa : var_decl_assign) (pas : var_decl_assigns)
 deriving BEq, Inhabited, Repr
 
-/- variable_declaration ::= data_type list_of_variable_decl_assignments ; -/
+-- variable_declaration ::= data_type list_of_variable_decl_assignments ;
 inductive var_decl where
 | var (dt : data_type) (vdas : var_decl_assigns)
 deriving BEq, Inhabited, Repr
@@ -640,12 +640,12 @@ inductive data_decl where
 | var_decl (vd : var_decl)
 deriving BEq, Inhabited, Repr
 
-/- param_assignment ::= parameter_identifier { unpacked_dimension } = constant_param_expression -/
+-- param_assignment ::= parameter_identifier { unpacked_dimension } = constant_param_expression
 inductive param_assign where
 | param (pid : VId) (cpe : constant_param_expression)
 deriving BEq, Inhabited, Repr
 
-/- list_of_param_assignments ::= param_assignment { , param_assignment } -/
+-- list_of_param_assignments ::= param_assignment { , param_assignment }
 inductive param_assigns where
 | one (pa : param_assign)
 | cons (pa : param_assign) (pas : param_assigns)
@@ -668,12 +668,12 @@ inductive local_param_decl where
 | local (dti : data_type_or_implicit) (pas : param_assigns)
 deriving BEq, Inhabited, Repr
 
-/- net_decl_assignment ::= net_identifier { unpacked_dimension } [ = expression ] -/
+-- net_decl_assignment ::= net_identifier { unpacked_dimension } [ = expression ]
 inductive net_decl_assign where
 | net (nid : VId) (ve : Option expression)
 deriving BEq, Inhabited, Repr
 
-/- list_of_net_decl_assignments ::= net_decl_assignment { , net_decl_assignment } -/
+-- list_of_net_decl_assignments ::= net_decl_assignment { , net_decl_assignment }
 inductive net_decl_assigns where
 | one (pa : net_decl_assign)
 | cons (pa : net_decl_assign) (pas : net_decl_assigns)
@@ -688,8 +688,8 @@ inductive net_decl where
 | net (nt : net_type) (pd : packed_dims) (nda : net_decl_assigns)
 deriving BEq, Inhabited, Repr
 
-/- NOTE: tf_port_item differs a bit from ansi_port_decl, but it's still fine to reuse for certain purposes. -/
-/- tf_port_list ::= tf_port_item { , tf_port_item } -/
+-- NOTE: tf_port_item differs a bit from ansi_port_decl, but it's still fine to reuse for certain purposes.
+-- tf_port_list ::= tf_port_item { , tf_port_item }
 abbrev tf_port_list := ansi_port_decls
 
 /-
@@ -761,8 +761,8 @@ inductive module_gen_item_decl where
 | pkg (pd : pkg_gen_item_decl)
 deriving BEq, Inhabited, Repr
 
-/- NOTE: it looks like event_control includes clocking_event? -/
-/- property_spec ::= [clocking_event ] [ disable iff ( expression_or_dist ) ] property_expr -/
+-- NOTE: it looks like event_control includes clocking_event?
+-- property_spec ::= [clocking_event ] [ disable iff ( expression_or_dist ) ] property_expr
 inductive prop_spec where
 | prop (oce : Option event_control) (pe : property_expr)
 deriving BEq, Inhabited, Repr
@@ -805,7 +805,7 @@ inductive module_common_item where
 | always (ak : always_keyword) (st : statement)
 deriving BEq, Inhabited, Repr
 
-/- parameter_value_assignment ::= # ( list_of_parameter_assignments ) -/
+-- parameter_value_assignment ::= # ( list_of_parameter_assignments )
 inductive param_value_assigns where
 | nil
 deriving BEq, Inhabited, Repr
@@ -843,7 +843,7 @@ inductive hier_ins where
 | hier (iid : VId) (pcs : port_conns)
 deriving BEq, Inhabited, Repr
 
-/- NOTE: currently only supports a single instantiation -/
+-- NOTE: currently only supports a single instantiation
 /-
 module_instantiation ::=
 module_identifier [ parameter_value_assignment ] hierarchical_instance { , hierarchical_instance } ;
@@ -883,7 +883,7 @@ inductive generate_module_item where
 | module (mgi : module_or_generate_item)
 deriving BEq, Inhabited, Repr
 
-/- generated_module_instantiation ::= generate { generate_module_item } endgenerate -/
+-- generated_module_instantiation ::= generate { generate_module_item } endgenerate
 inductive generated_module_ins where
 | generated (gmi : generate_module_item)
 deriving BEq, Inhabited, Repr
